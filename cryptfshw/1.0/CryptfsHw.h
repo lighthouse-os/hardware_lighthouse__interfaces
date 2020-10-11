@@ -16,10 +16,12 @@
 
 #pragma once
 
+#include <android-base/macros.h>
+#include <vendor/qti/hardware/cryptfshw/1.0/ICryptfsHw.h>
+
 #include <memory>
 
-#include <ICryptfsHwController.h>
-#include <vendor/qti/hardware/cryptfshw/1.0/ICryptfsHw.h>
+#include "ICryptfsHwController.h"
 
 namespace vendor {
 namespace qti {
@@ -44,7 +46,7 @@ class CryptfsHw : public ICryptfsHw {
 
   private:
     std::unique_ptr<ICryptfsHwController> controller_;
-    int storage_type_ = 0;
+    int usage_;
 
     DISALLOW_IMPLICIT_CONSTRUCTORS(CryptfsHw);
 };

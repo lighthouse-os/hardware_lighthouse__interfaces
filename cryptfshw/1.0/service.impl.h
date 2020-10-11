@@ -28,7 +28,6 @@
 #include <CryptfsHw.h>
 
 using ::android::OK;
-using ::android::sp;
 using ::android::status_t;
 using ::android::hardware::configureRpcThreadpool;
 using ::android::hardware::joinRpcThreadpool;
@@ -42,36 +41,22 @@ int main() {
     android::hardware::ProcessState::initWithMmapSize((size_t)16384);
 #endif
 
-    sp<CryptfsHw> cryptfsHw;
-    status_t status = OK;
-
     LOG(DEBUG) << "CryptfsHw HAL service is starting.";
 
     auto controller = std::make_unique<Controller>();
-    if (controller == nullptr) {
-        goto shutdown;
-    }
-
-    cryptfsHw = new CryptfsHw(std::move(controller));
-    if (cryptfsHw == nullptr) {
-        LOG(ERROR) << "Can not create an instance of CryptfsHw HAL CryptfsHw Iface, exiting.";
-        goto shutdown;
-    }
+    android::sp<CryptfsHw> cryptfsHw = new CryptfsHw(std::move(controller));
 
     configureRpcThreadpool(1, true /*callerWillJoin*/);
 
-    status = cryptfsHw->registerAsService();
-    if (status != OK) {
+    status_t status = cryptfsHw->registerAsService();
+    if (status == OK) {
+        LOG(DEBUG) << "CryptfsHw HAL service is ready.";
+        joinRpcThreadpool();
+    } else {
         LOG(ERROR) << "Could not register service for CryptfsHw HAL CryptfsHw Iface (" << status
                    << ")";
-        goto shutdown;
     }
 
-    LOG(DEBUG) << "CryptfsHw HAL service is ready.";
-    joinRpcThreadpool();
-    // Should not pass this line
-
-shutdown:
     // In normal operation, we don't expect the thread pool to shutdown
     LOG(ERROR) << "CryptfsHw HAL service is shutting down.";
     return 1;

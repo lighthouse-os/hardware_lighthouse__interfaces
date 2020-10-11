@@ -16,11 +16,10 @@
 
 #pragma once
 
-#include <memory>
-
+#include <ICryptfsHwController.h>
 #include <android-base/macros.h>
 
-#include <ICryptfsHwController.h>
+#include <memory>
 
 namespace vendor {
 namespace qti {

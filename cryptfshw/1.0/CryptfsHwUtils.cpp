@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+#include "CryptfsHwUtils.h"
+
 #include <algorithm>
 #include <cstring>
-
-#include "CryptfsHwUtils.h"
 
 namespace vendor {
 namespace qti {
@@ -33,11 +33,9 @@ void* secure_memset(void* v, int c, size_t n) {
 }
 
 void GetTmpPasswd(const char* passwd, unsigned char* tmp_passwd, size_t buf_len) {
-    int passwd_len = 0;
-
     secure_memset(tmp_passwd, 0, buf_len);
     if (passwd) {
-        passwd_len = strnlen(passwd, buf_len);
+        size_t passwd_len = strnlen(passwd, buf_len);
         memcpy(tmp_passwd, passwd, passwd_len);
     }
 }
